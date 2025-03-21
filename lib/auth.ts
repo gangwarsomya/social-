@@ -58,6 +58,7 @@ export async function getAuthToken(): Promise<string> {
     return `${authToken.token_type} ${authToken.access_token}`
   } catch (error) {
     console.error("Error obtaining auth token:", error)
+    console.error("Request body:", JSON.stringify(AUTH_CREDENTIALS))
     throw new Error("Failed to authenticate with the API")
   }
 }
@@ -77,6 +78,8 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}): Pro
     }
 
     const response = await fetch(url, authOptions)
+    console.log("Response status:", response.status)
+    console.log("Response body:", await response.text())
 
     // If unauthorized, try to refresh token and retry once
     if (response.status === 401) {
@@ -102,4 +105,3 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}): Pro
     throw error
   }
 }
-
